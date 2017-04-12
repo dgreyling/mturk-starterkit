@@ -13,7 +13,7 @@ When the server receives this request, it will pull in the example corresonding 
 
 ## Firebase
 
-To authenticate with Firebase, we use your app information from `config.json`.
+To authenticate with Firebase, we use your app information from `firebase.config.json`.
 Your database permission should be set to readable by everyone.
 You should probably limit your write permission.
 
