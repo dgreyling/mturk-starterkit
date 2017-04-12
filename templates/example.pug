@@ -29,6 +29,9 @@ form(id='queries-form', action='{{ mturk.host }}', method='POST')
   for key, val in mturk.items()
     input(type='hidden', id='mturk_{{key}}', value='{{val}}', name='{{key}}')
 
+  label Optional Feedback
+  textarea.form-control(type='text', id='feedback', placeholder='Optional feedback', name='feedback', rows=5)
+
   // submission button
   input(type='submit', value='Submit', class='btn btn-success')
 {% endblock %}

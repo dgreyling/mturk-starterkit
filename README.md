@@ -5,39 +5,112 @@ It comes with basic Heroku integration such that you can host it using the basic
 The templating engine is based on Pug.
 
 
-## Routes
+## Setup
 
-Examples will be hosted at `/example/<example_id>?prod=<mechanical_turk_prod?>`.
-When the server receives this request, it will pull in the example corresonding to `example_id` from Firebase and display `templates/example.pug` after populating it with the example.
+1. Fork Repo
 
+Fork the repo and clone it. Feel free to rename it to something more appropriate for your use case.
 
-## Firebase
-
-To authenticate with Firebase, we use your app information from `config.json`.
-Your database permission should be set to readable by everyone.
-You should probably limit your write permission.
-
-Examples are written to `/examples`, with the key being `example_id` and the payload being the json object corresponding to the example.
+```bash
+git clone https://github.com/vzhong/mturk-starterkit
+```
 
 
-## MTurk
+2. Set up Heroku
 
-For Mechanical Turk, there are two "locations" we need to talk to - the sand box or the production server.
-Because our server is not aware of who it is talking to, we will tell it about the source using a request parameter.
-Namely, when a hit comes from production, it should have the query parameter `prod=True`.
+```bash
+heroku create <your app name>
+```
 
-
-## Deploying on Heroku
-
-Run `heroku create`.
+Remember the name of the app, you will need when submitting jobs to MTurk.
 
 
-# Managing Jobs on MTurk
+3. Set up Firebase database
 
-The binaries in `./mturk` help you submit and manage jobs on MTurk.
-To use them, you need to set the environment variables:
+Create an account at [Firebase](https://firebase.google.com).
+Make an app on Firebase - we will use the database functionality.
+For simplicity, we actually will upload HIT data using the web interface, so your database don't need write access enabled.
+However, all entries need to be readable (we won't bother securing read with authentication).
+Hence, set the correct permission in to:
+
+```json
+{
+  "rules": {
+    ".read": true,
+    ".write": false,
+  }
+}
+```
+
+
+4. Upload data to firebase
+
+Your data upload will be a json file with the following format:
+
+```json
+{
+  'examples': {
+    '<example_id1>': {'id': '<example_id1>', 'other': 'fields'},
+    '<example_id2>': {'id': '<example_id2>', 'other': 'fields'},
+    '<example_id3>': {'id': '<example_id3>', 'other': 'fields'},
+    '<example_id4>': {'id': '<example_id4>', 'other': 'fields'}
+  }
+}
+```
+
+Namely, there should be a top level entry of `examples`, under which is a dictionary of key value pairs in which each key is an example id and each value is the example json object.
+Note that each example json object must also have an `id` field that is equal to its own example id.
+After this, you should be able to go to Firebase's database and see that your data has been uploaded.
+
+
+5. Make interface using Flask server
+
+Now that the data has been uploaded, you can proceed to make your interface.
+First, go to your Firebase app and go to "Add Firebase to your Web app" to find your app settings.
+Fill this information into the file `firebase.config.json`.
+The Flask server will use this information to retrieve data from your Firebase app.
+Don't worry, it's ok if this information is publicly available - it's merely an identifier for your app.
+
+You will most likely want to edit the following files:
+
+- `example.pug`: how an individual HIT is rendered.
+- `instructions.pug`: instructions for how to do a HIT.
+- `examples.py`: examples of correct annotations, incorrect annotations, and reasons for why the latter are incorrect.
+
+
+You may optionally want to edit `main.py`, which is the entrypoint to the Flask app, as well as `instruction_example.pug`, which specifies how each example in the instruction should be rendered.
+Finally, `base.pug` contains the base template, which contains javascript and css imports.
+
+
+In short, this is a normal Flask app, with one route active: `/example/<example_id>`.
+
+To deploy your app to Heroku, simply do:
+
+```bash
+git push heroku
+```
+
+Note that while in development, your clicking the "Submit" button actually don't do anyting, as we will intercept the form submission because of the lack of an AssignmentId.
+
+6. Submitting HITs to Mechanical Turk
+
+We provide tools in the `mturk` folder to help you submit to and manage HITs on MTurk.
+In order for this to work, you need to do the housekeeping.
+
+First, you need to set up the following environment variables for authenticating with Mturk:
 
 ```bash
 MTURK_AWS_ACCESS_KEY_ID=your_key
 MTURK_AWS_SECRET_ACCESS_KEY=your_secret
 ```
+
+Next, you need to set up the information workers will see when they visit the summary of your HIT on MTurk.
+You can do this by modifying `turk.config.json`.
+
+Finally, when you submit, you must give `submit.py` the name of your Firebase app, such that it can deduce the correct URL to direct workers to.
+
+To manage your hits (e.g. accept, extend, count), use `manage.py`.
+Similarly, you can reject hits using `reject.py`.
+
+All binaries in the `mturk` folder come with `--help`, as well as `--prod`.
+When you use the latter flag, you will communicate with the real production server instead of the sandbox server of Mturk.
