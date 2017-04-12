@@ -45,7 +45,7 @@ if __name__ == '__main__':
     parser = ArgumentParser(formatter_class=ArgumentDefaultsHelpFormatter)
     parser.add_argument('app_name', default='app_name', help='name of your app for Firebase. Used to construct the url.')
     parser.add_argument('fdata', help='data file to use, each line is a json for an example, with an id field')
-    parser.add_argument('fconfig', default='turk.config.json', help='MTurk HIT configuration.')
+    parser.add_argument('--fconfig', default='turk.config.json', help='MTurk HIT configuration.')
     parser.add_argument('--prod', action='store_true', help='whether to use production')
     parser.add_argument('--price', type=float, default=0.25, help='price per HIT')
     parser.add_argument('--copies', type=int, default=1, help='how many copies per HIT?')
@@ -61,12 +61,13 @@ if __name__ == '__main__':
         hit_config = json.load(f)
 
     with open(args.fdata, 'r') as f, open(args.fdata.replace('.json', '.hits.json'), 'w') as fout:
-        for i, line in tqdm(enumerate(f)):
+        data = json.load(f)['examples']
+        e_ids = sorted(list(data.keys()))
+        for i, example_id in tqdm(enumerate(e_ids)):
             if not args.prod and i >= args.debug_hits:
                 print('stopping after {} HITs because I\'m in Sandbox mode'.format(args.debug_hits))
                 break
-            e = json.loads(line)
-            example_id = e['id']
+            e = data[example_id]
             options = {}
             if args.prod:
                 options['prod'] = True
@@ -75,7 +76,7 @@ if __name__ == '__main__':
             create_hit_result = connection.create_hit(
                 duration=args.duration,
                 max_assignments=args.copies,  # one copy
-                question=get_form(table_id, **options),
+                question=get_form(args.app_name, example_id, **options),
                 reward=Price(amount=args.price),
                 # Determines information returned by method in API, not super important
                 response_groups=('Minimal', 'HITDetail'),
