@@ -27,7 +27,7 @@ form(id='queries-form', action='{{ mturk.host }}', method='POST')
   // these things are actually very useful, so don't change them
   input(type='hidden', id='example_id', value='{{example_id}}', name='example_id')
   for key, val in mturk.items()
-    input(type='hidden', id='mturk_{{key}}', value='{{val}}', name='{{key}}')
+    input(type='hidden', id='{{key}}', value='{{val}}', name='{{key}}')
 
   label Optional Feedback
   textarea.form-control(type='text', id='feedback', placeholder='Optional feedback', name='feedback', rows=5)
@@ -41,7 +41,7 @@ form(id='queries-form', action='{{ mturk.host }}', method='POST')
 script.
   $('#queries-form').submit(function(e) {
     // we're not going to submit if it is not turk
-    {% if not mturk.assignment_id %}
+    {% if not mturk.assignmentId %}
       toastr.info('Your work was not submitted to mechanical turk because it is missing the assignment id');
       e.preventDefault();
     {% endif %}

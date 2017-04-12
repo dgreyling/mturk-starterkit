@@ -21,10 +21,10 @@ def get_mturk():
     if request.args.get('prod', False):
         host = "https://www.mturk.com/mturk/externalSubmit"
     return {
-        "worker_id": request.args.get("workerId", ''),
-        "assignment_id": request.args.get("assignmentId", ''),
+        "workerId": request.args.get("workerId", ''),
+        "assignmentId": request.args.get("assignmentId", ''),
         "host": host,
-        "hit_id": request.args.get("hitId", ''),
+        "hitId": request.args.get("hitId", ''),
         "ip": request.environ.get('REMOTE_ADDR', '')
     }
 

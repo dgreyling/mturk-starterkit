@@ -15,7 +15,7 @@ if __name__ == '__main__':
     parser.add_argument('--prod', action='store_true', help='whether to use production or sandbox MTurk')
     parser.add_argument('--delete', action='store_true', help='whether to delete all HITs')
     parser.add_argument('--download', default='', help='if specified, downloads all HITs to the database given')
-    parser.add_argument('--accept', action='store_true', hep='whether to accept all HITs')
+    parser.add_argument('--accept', action='store_true', help='whether to accept all HITs')
     parser.add_argument('--title_filter', default='', help='if specified, will filter HITs that contain this substring in the title')
     parser.add_argument('--extend', type=int, default=0, help='how many days to extend expiration by')
     args = parser.parse_args()
@@ -54,7 +54,7 @@ if __name__ == '__main__':
                 connection.approve_assignment(a.AssignmentId, feedback='Thank you!')
                 counts['action_assignment_accepted'] += 1
 
-        if args.extend >= 0:
+        if args.extend > 0:
             try:
                 connection.extend_hit(hit.HITId, expiration_increment=60 * 60 * 24 * args.extend)
                 counts['action_hit_extended'] += 1
