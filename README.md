@@ -10,6 +10,7 @@ The templating engine is based on Pug.
 Examples will be hosted at `/example/<example_id>?prod=<mechanical_turk_prod?>`.
 When the server receives this request, it will pull in the example corresonding to `example_id` from Firebase and display `templates/example.pug` after populating it with the example.
 
+You can also design your instructions in `templates/instructions.pug` as well as populate examples of good vs. bad annotations in `examples.py`.
 
 ## Firebase
 
@@ -42,3 +43,5 @@ To use them, you need to set the environment variables:
 MTURK_AWS_ACCESS_KEY_ID=your_key
 MTURK_AWS_SECRET_ACCESS_KEY=your_secret
 ```
+
+For submission, specify your HIT information in `turk.config.json`.
