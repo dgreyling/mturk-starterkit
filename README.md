@@ -7,7 +7,7 @@ The templating engine is based on Pug.
 
 ## Setup
 
-1. Fork Repo
+### 1. Fork Repo
 
 Fork the repo and clone it. Feel free to rename it to something more appropriate for your use case.
 
@@ -16,7 +16,7 @@ git clone https://github.com/vzhong/mturk-starterkit
 ```
 
 
-2. Set up Heroku
+### 2. Set up Heroku
 
 ```bash
 heroku create <your app name>
@@ -25,7 +25,7 @@ heroku create <your app name>
 Remember the name of the app, you will need when submitting jobs to MTurk.
 
 
-3. Set up Firebase database
+### 3. Set up Firebase database
 
 Create an account at [Firebase](https://firebase.google.com).
 Make an app on Firebase - we will use the database functionality.
@@ -43,7 +43,7 @@ Hence, set the correct permission in to:
 ```
 
 
-4. Upload data to firebase
+### 4. Upload data to firebase
 
 Your data upload will be a json file with the following format:
 
@@ -63,7 +63,7 @@ Note that each example json object must also have an `id` field that is equal to
 After this, you should be able to go to Firebase's database and see that your data has been uploaded.
 
 
-5. Make interface using Flask server
+### 5. Make interface using Flask server
 
 Now that the data has been uploaded, you can proceed to make your interface.
 First, go to your Firebase app and go to "Add Firebase to your Web app" to find your app settings.
@@ -92,7 +92,7 @@ git push heroku
 
 Note that while in development, your clicking the "Submit" button actually don't do anyting, as we will intercept the form submission because of the lack of an AssignmentId.
 
-6. Submitting HITs to Mechanical Turk
+### 6. Submitting HITs to Mechanical Turk
 
 We provide tools in the `mturk` folder to help you submit to and manage HITs on MTurk.
 In order for this to work, you need to do the housekeeping.
