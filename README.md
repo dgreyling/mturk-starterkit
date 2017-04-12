@@ -29,7 +29,8 @@ Namely, when a hit comes from production, it should have the query parameter `pr
 
 ## Deploying on Heroku
 
-Run `heroku create`.
+Run `heroku create` the first time.
+After that, you should be able to push to production with `heroku push`.
 
 
 # Managing Jobs on MTurk
