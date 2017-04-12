@@ -49,11 +49,11 @@ Your data upload will be a json file with the following format:
 
 ```json
 {
-  'examples': {
-    '<example_id1>': {'id': '<example_id1>', 'other': 'fields'},
-    '<example_id2>': {'id': '<example_id2>', 'other': 'fields'},
-    '<example_id3>': {'id': '<example_id3>', 'other': 'fields'},
-    '<example_id4>': {'id': '<example_id4>', 'other': 'fields'}
+  "examples": {
+    "<example_id1>": {"id": "<example_id1>", "other": "fields"},
+    "<example_id2>": {"id": "<example_id2>", "other": "fields"},
+    "<example_id3>": {"id": "<example_id3>", "other": "fields"},
+    "<example_id4>": {"id": "<example_id4>", "other": "fields"}
   }
 }
 ```
