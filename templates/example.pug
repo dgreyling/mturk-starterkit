@@ -1,0 +1,48 @@
+{% extends 'base.pug' %}
+
+{% block content %}
+
+// Your instructions here
+h1 Instructions
+{% include 'instructions.pug' %}
+
+// Your Examples here
+h3 Examples
+for e in examples
+  {% with example=e %}
+  {% include 'instruction_example.pug' %}
+  {% endwith %}
+
+h1 Task
+
+form(id='queries-form', action='{{ mturk.host }}', method='POST')
+  // Your task here
+  // Here's an example input that you want the user to write
+  .input-group 
+    span.input-group-addon MyInput
+    input(type="text", class="form-control", placeholder="Your input", name='user_input', required)
+  // Here's an example of a hidden field used to send some info to MTurk but doesn't require user input
+  input(type="hidden", name='hidden_input', value="stuff", required)
+
+  // these things are actually very useful, so don't change them
+  input(type='hidden', id='example_id', value='{{example_id}}', name='example_id')
+  for key, val in mturk.items()
+    input(type='hidden', id='mturk_{{key}}', value='{{val}}', name='{{key}}')
+
+  // submission button
+  input(type='submit', value='Submit', class='btn btn-success')
+{% endblock %}
+
+
+{% block script %}
+script.
+  $('#queries-form').submit(function(e) {
+    // we're not going to submit if it is not turk
+    {% if not mturk.assignment_id %}
+      toastr.info('Your work was not submitted to mechanical turk because it is missing the assignment id');
+      e.preventDefault();
+    {% endif %}
+
+    // otherwise the submission to mturk goes through.
+  })
+{% endblock %}<Paste>
